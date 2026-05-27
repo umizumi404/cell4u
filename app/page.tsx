@@ -1,65 +1,143 @@
-import Image from "next/image";
+import {
+  CheckCircle2,
+  PhoneCall,
+  Radio,
+  Search,
+  Sparkles,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { VoiceSetup } from "@/components/cell-for-you/voice-setup";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen">
+      <header className="border-b border-white/10 bg-background/70 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <div className="grid size-9 place-items-center rounded-xl border border-white/10 bg-white/[0.04]">
+              <Radio className="size-4 text-zinc-100" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold tracking-tight">Cell For You</p>
+              <p className="text-xs text-muted-foreground">
+                Autonomous outbound sales
+              </p>
+            </div>
+          </div>
+          <div className="hidden items-center gap-2 md:flex">
+            <Badge variant="outline" className="border-white/10 bg-white/[0.03]">
+              Setup mode
+            </Badge>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div>
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-muted-foreground">
+              <Sparkles className="size-3.5 text-zinc-200" />
+              Voice in. Campaign out.
+            </div>
+            <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-zinc-50 sm:text-5xl">
+              Build an outbound campaign without typing.
+            </h1>
+            <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground">
+              Start by recording the offer, audience, location, and success
+              criteria. The app will then generate the campaign, find leads,
+              start calls, and wait for provider webhooks to fill the dashboard.
+            </p>
+
+            <div className="mt-8 space-y-3">
+              <FlowStep
+                icon={Sparkles}
+                title="1. Capture campaign"
+                description="Voice transcript becomes a structured campaign and sales prompt."
+                state="active"
+              />
+              <FlowStep
+                icon={Search}
+                title="2. Find leads"
+                description="Google Places returns phone-qualified businesses for the selected market."
+              />
+              <FlowStep
+                icon={PhoneCall}
+                title="3. Start calls"
+                description="ElevenLabs agents call leads and Twilio/ElevenLabs webhooks update outcomes."
+              />
+            </div>
+          </div>
+          <VoiceSetup />
         </div>
-      </main>
+
+        <Card className="mt-8 border-white/10 bg-white/[0.025]">
+          <CardHeader>
+            <CardTitle>Campaign workspace</CardTitle>
+            <CardDescription>
+              This area stays empty until a real campaign is created. No demo
+              rows, fake calls, or inflated metrics.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3 md:grid-cols-3">
+            <EmptyStage title="Campaign" description="Waiting for voice setup." />
+            <EmptyStage title="Leads" description="Run lead discovery next." />
+            <EmptyStage title="Calls" description="Call activity appears here." />
+          </CardContent>
+        </Card>
+      </section>
+    </main>
+  );
+}
+
+function FlowStep({
+  icon: Icon,
+  title,
+  description,
+  state = "waiting",
+}: {
+  icon: typeof Sparkles;
+  title: string;
+  description: string;
+  state?: "active" | "waiting";
+}) {
+  return (
+    <div className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.025] p-3">
+      <div className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.04]">
+        {state === "active" ? (
+          <Icon className="size-4 text-zinc-100" />
+        ) : (
+          <Icon className="size-4 text-muted-foreground" />
+        )}
+      </div>
+      <div>
+        <p className="text-sm font-medium text-zinc-100">{title}</p>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function EmptyStage({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-dashed border-white/10 bg-black/10 p-4">
+      <CheckCircle2 className="size-4 text-muted-foreground" />
+      <p className="mt-4 text-sm font-medium text-zinc-100">{title}</p>
+      <p className="mt-1 text-sm text-muted-foreground">{description}</p>
     </div>
   );
 }
