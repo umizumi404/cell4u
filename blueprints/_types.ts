@@ -173,6 +173,13 @@ export interface BlueprintAdapter {
     personaId: string,
   ): Promise<CallContext>;
   classifyOutcome(transcript: CallTranscript): Outcome;
+  /**
+   * Compliance hook (AGENTS.md invariant #8). The dispatcher MUST route
+   * leads through this before any dial when
+   * `compliance_profile.dnc_scrub_required === true`. Blueprints whose
+   * audience doesn't require scrub may return the input unchanged.
+   */
+  scrubLeads(leads: ReadonlyArray<Lead>): Promise<ReadonlyArray<Lead>>;
 }
 
 /**
@@ -221,8 +228,14 @@ export class NotImplementedError extends Error {
 }
 
 /**
- * Runtime sanity-check on a blueprint. Called once per module at registry
- * load time so a malformed blueprint surfaces at import, not at dispatch.
+ * Structural validation, run at module load. Catches programmer errors
+ * (bad vertical_id, missing options on enum, consumer audience without
+ * DNC, etc.) and fails loud at import / build time.
+ *
+ * Per AGENTS.md v2.2: this does NOT check `flow_template_id`, because that
+ * id is empty until Ticket 2.5's provisioning script writes it. The app
+ * must boot and develop cleanly in between. Dispatch-time readiness lives
+ * in `assertDispatchReady` below.
  */
 export function validateBlueprint(blueprint: CampaignBlueprint): void {
   const v = blueprint.vertical_id;
@@ -231,12 +244,6 @@ export function validateBlueprint(blueprint: CampaignBlueprint): void {
     throw new BlueprintContractError(
       v || "<empty>",
       "vertical_id must be snake_case ASCII",
-    );
-  }
-  if (!blueprint.flow_template_id) {
-    throw new BlueprintContractError(
-      v,
-      "flow_template_id is required (provisioned in Ticket 2.5)",
     );
   }
   if (blueprint.persona_set.length === 0) {
@@ -280,6 +287,44 @@ export function validateBlueprint(blueprint: CampaignBlueprint): void {
     throw new BlueprintContractError(
       v,
       "consumer-audience blueprints must set dnc_scrub_required: true",
+    );
+  }
+}
+
+export class DispatchNotReadyError extends Error {
+  constructor(verticalId: string, reason: string) {
+    super(
+      `Blueprint "${verticalId}" is not dispatch-ready: ${reason}. ` +
+        `Run scripts/provision (Ticket 2.5) before dispatching calls.`,
+    );
+    this.name = "DispatchNotReadyError";
+  }
+}
+
+/**
+ * Dispatch-time readiness check (AGENTS.md v2.2 patch).
+ *
+ * The Retell batch layer MUST call this immediately before placing any
+ * call. It verifies that the one-time provisioning (Ticket 2.5) has
+ * actually populated the resources our runtime needs:
+ *
+ *   - `flow_template_id`: the published Retell flow for this vertical.
+ *   - `RETELL_FROM_NUMBER`: the outbound number, owned by Retell.
+ *
+ * Kept separate from `validateBlueprint` so that the app can boot and
+ * develop with empty provisioning env vars; only the dispatcher fails.
+ */
+export function assertDispatchReady(blueprint: CampaignBlueprint): void {
+  if (!blueprint.flow_template_id) {
+    throw new DispatchNotReadyError(
+      blueprint.vertical_id,
+      "flow_template_id is empty (provisioned in Ticket 2.5)",
+    );
+  }
+  if (!process.env.RETELL_FROM_NUMBER) {
+    throw new DispatchNotReadyError(
+      blueprint.vertical_id,
+      "RETELL_FROM_NUMBER env var is not set",
     );
   }
 }

@@ -41,7 +41,12 @@ export type Profile = {
 export type Agent = {
   id: number;
   business: string;
-  variant: "A" | "B" | "C" | "D";
+  /**
+   * Persona archetype id (e.g. "the_offer_stacker"). Sourced from the
+   * active blueprint's `persona_set` at dispatch time (Ticket 6/7).
+   * Empty string when the tile hasn't been assigned a persona yet.
+   */
+  archetype: string;
   state: AgentState;
   elapsed: number;
   outcome?: AgentState;

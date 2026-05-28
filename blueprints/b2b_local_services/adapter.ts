@@ -95,8 +95,21 @@ async function buildCallContext(
   );
 }
 
+/**
+ * Business audience does not require DNC scrubbing. The dispatcher only
+ * calls this when `dnc_scrub_required === true`, but we implement it
+ * anyway so the contract is total: no path can skip the compliance hook
+ * by mistake.
+ */
+async function scrubLeads(
+  leads: ReadonlyArray<Lead>,
+): Promise<ReadonlyArray<Lead>> {
+  return leads;
+}
+
 export const b2bLocalServicesAdapter: BlueprintAdapter = {
   sourceLeads,
   buildCallContext,
   classifyOutcome,
+  scrubLeads,
 };

@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import {
   Button,
   Pill,
@@ -12,48 +10,23 @@ import {
 } from "./primitives";
 import { STATE_LABELS, type Agent } from "./types";
 
-// NOTE: live call transcript is faked — real Twilio call recording +
-// transcription will replace LIVE_SCRIPT once the call-status webhook
-// pipeline lands. See CLAUDE.md → "Live call transcript".
-const LIVE_SCRIPT: TranscriptTurn[] = [
-  {
-    who: "agent",
-    ts: "00:02",
-    text: "Hi, this is Sam calling from webpro.agency. Quick one — do you currently work with anyone for your website?",
-  },
-  {
-    who: "lead",
-    ts: "00:08",
-    text: "We have someone in-house actually, but they're really backed up.",
-    initials: "ML",
-    speaker: "Maple Studio",
-  },
-  {
-    who: "agent",
-    ts: "00:14",
-    text: "Got it. We're built for overflow — 30 seconds for how that works?",
-  },
-  {
-    who: "lead",
-    ts: "00:18",
-    text: "Sure, I've got a minute.",
-    initials: "ML",
-    speaker: "Maple Studio",
-  },
-  {
-    who: "agent",
-    ts: "00:21",
-    text: "Most studios like yours hand us the work that's blocking releases — we turn around builds in 5 days, $8–15k. We could book you in next week.",
-  },
-];
+/**
+ * Call drawer. Ticket 7 wires the live transcript ticker to
+ * `transcript_chunk` events from the campaign channel.
+ *
+ * Removed in Ticket 2: the hard-coded LIVE_SCRIPT fake. The component now
+ * renders whatever transcript turns it's given (empty by default), so a
+ * just-opened drawer reads as "live, no audio yet" rather than as a
+ * canned demo.
+ */
 
 export function CallDrawer(props: {
   agent: Agent;
   onClose: () => void;
   onReview: () => void;
+  /** Transcript turns delivered so far (Ticket 7 will source these). */
+  transcript?: ReadonlyArray<TranscriptTurn>;
 }) {
-  // Remount the inner component when the focused agent changes so the
-  // transcript reveal restarts cleanly without a setState-in-effect.
   return <CallDrawerInner key={props.agent.id} {...props} />;
 }
 
@@ -61,24 +34,14 @@ function CallDrawerInner({
   agent,
   onClose,
   onReview,
+  transcript = [],
 }: {
   agent: Agent;
   onClose: () => void;
   onReview: () => void;
+  transcript?: ReadonlyArray<TranscriptTurn>;
 }) {
-  const [revealed, setRevealed] = useState(1);
-  useEffect(() => {
-    const id = window.setInterval(
-      () => setRevealed((n) => Math.min(n + 1, LIVE_SCRIPT.length)),
-      1500,
-    );
-    return () => window.clearInterval(id);
-  }, []);
-
-  const turns = LIVE_SCRIPT.slice(0, revealed);
-  const phoneFallback = `+1 (416) 555-${((agent.id * 31 + 142) % 10000)
-    .toString()
-    .padStart(4, "0")}`;
+  const phoneFallback = `+1 (000) 000-0000`;
   const phone = agent.phone || phoneFallback;
 
   return (
@@ -100,7 +63,7 @@ function CallDrawerInner({
             className="c4u-small"
             style={{ color: "var(--c4u-mist)", marginTop: 4 }}
           >
-            Variant {agent.variant} · {formatTimer(agent.elapsed)} · {phone}
+            {agent.archetype || "—"} · {formatTimer(agent.elapsed)} · {phone}
           </div>
         </div>
         <button
@@ -115,7 +78,7 @@ function CallDrawerInner({
       <div className="c4u-drawer__wave">
         <Waveform bars={48} active height={50} color="var(--c4u-coral)" />
       </div>
-      <TranscriptList turns={turns} />
+      <TranscriptList turns={[...transcript]} />
       <div className="c4u-drawer__foot">
         <Button variant="navy-on-dark" onClick={onReview}>
           Open full review

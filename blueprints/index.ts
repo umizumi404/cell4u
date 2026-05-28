@@ -45,8 +45,11 @@ export type {
 
 export {
   BlueprintContractError,
+  DispatchNotReadyError,
   NotImplementedError,
+  assertDispatchReady,
   dynamicVarSchemaTypes,
+  validateBlueprint,
 } from "./_types";
 
 interface BlueprintModule {

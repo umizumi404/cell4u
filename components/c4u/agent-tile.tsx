@@ -18,7 +18,7 @@ export function AgentTile({
   return (
     <button className={cls} onClick={onClick} type="button">
       <div className="c4u-tile__biz">{agent.business}</div>
-      <div className="c4u-tile__var">VARIANT {agent.variant}</div>
+      <div className="c4u-tile__var">{agent.archetype || "—"}</div>
       <div className="c4u-tile__meta">
         <span className="c4u-tile__stage">
           {STATE_LABELS[agent.state] || agent.state}

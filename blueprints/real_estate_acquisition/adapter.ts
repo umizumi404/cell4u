@@ -76,8 +76,25 @@ async function buildCallContext(
   );
 }
 
+/**
+ * Real-estate acquisition calls residential numbers, which means we MUST
+ * route every lead through a DNC/registry scrub before dialing
+ * (AGENTS.md invariant #8). Ticket 5 implements the real scrub; until
+ * then we throw — this is the explicit gate keeping the flag-gated
+ * blueprint from accidentally dialing without scrub.
+ */
+async function scrubLeads(
+  _leads: ReadonlyArray<Lead>,
+): Promise<ReadonlyArray<Lead>> {
+  throw new NotImplementedError(
+    "real_estate_acquisition.scrubLeads (DNC + state registry scrub)",
+    "Ticket 5",
+  );
+}
+
 export const realEstateAcquisitionAdapter: BlueprintAdapter = {
   sourceLeads,
   buildCallContext,
   classifyOutcome,
+  scrubLeads,
 };

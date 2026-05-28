@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { AgentTile } from "./agent-tile";
 import {
@@ -11,8 +11,50 @@ import {
   Waveform,
   type SpherePhase,
 } from "./primitives";
-import { buildInitialAgents, tickAgent } from "./war-room-sim";
-import type { Agent } from "./types";
+import type { Agent, AgentState } from "./types";
+
+/**
+ * Decorative tile sample for the landing-page war-room preview only.
+ * Static (no animation) — this is marketing copy, not a live dashboard.
+ * Real tiles in the app come from realtime `tile_update` events.
+ */
+function landingPreviewAgents(count: number): Agent[] {
+  const states: AgentState[] = [
+    "pitch",
+    "connected",
+    "dialing",
+    "closing",
+    "closed-won",
+    "ringing",
+    "queued",
+    "voicemail",
+    "no-answer",
+  ];
+  const archetypes = [
+    "the_offer_stacker",
+    "the_direct_closer",
+    "the_smooth_operator",
+    "the_energizer",
+    "the_mentor",
+  ];
+  const businesses = [
+    "Maple Studio Yoga",
+    "Northgate Dental",
+    "Sunside Bakery",
+    "Riverbend HVAC",
+    "Brick & Bloom",
+    "Atlas Auto Body",
+    "Field Notes Coffee",
+    "Cedar Pediatrics",
+  ];
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    business: businesses[i % businesses.length],
+    archetype: archetypes[i % archetypes.length],
+    state: states[i % states.length],
+    elapsed: 12 + ((i * 7) % 180),
+  }));
+}
 
 const LANDING_INTAKE_SCRIPT: { q: string; user: string }[] = [
   { q: "Hi, I'm here to help you sell. What's your website?", user: "webpro.agency" },
@@ -236,15 +278,7 @@ function HowItWorks({ onStart }: { onStart: () => void }) {
 }
 
 function LandingWarRoom() {
-  const [agents, setAgents] = useState<Agent[]>(() => buildInitialAgents(20));
-  const [t0] = useState(() => Date.now());
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      const t = (Date.now() - t0) / 1000;
-      setAgents((prev) => prev.map((a) => tickAgent(a, t)));
-    }, 600);
-    return () => window.clearInterval(id);
-  }, [t0]);
+  const agents = useMemo(() => landingPreviewAgents(20), []);
 
   return (
     <section className="c4u-lp-war">

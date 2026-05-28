@@ -1,16 +1,28 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+
+import { useCampaignChannel } from "@/lib/realtime/client";
 
 import { AgentTile } from "./agent-tile";
 import { CallDrawer } from "./call-drawer";
 import { StatRow } from "./primitives";
-import { tickAgent } from "./war-room-sim";
 import type { Agent, Campaign } from "./types";
+
+/**
+ * War-room grid. Ticket 7 will wire `useCampaignChannel` to update tiles
+ * from real `tile_update` events. The local `setAgents` setter is kept on
+ * the props because the orchestrator still owns the array; this component
+ * is render-only for v0's stripped skeleton.
+ *
+ * Removed in Ticket 2:
+ *   - `war-room-sim.ts` / `tickAgent` (faked transitions)
+ *   - the `setInterval(500ms)` simulator
+ *   - filler-tile padding
+ */
 
 export function WarRoom({
   agents,
-  setAgents,
   campaign,
   fleetSize,
   onReviewCall,
@@ -22,18 +34,10 @@ export function WarRoom({
   onReviewCall: (agent: Agent) => void;
 }) {
   const [focusId, setFocusId] = useState<number | null>(null);
-  const [t0] = useState(() => Date.now());
 
-  // Tile-state simulator. Drives queued → … → outcome transitions until
-  // real Twilio webhooks land. See CLAUDE.md.
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      const t = (Date.now() - t0) / 1000;
-      setAgents(agents.map((a) => tickAgent(a, t)));
-    }, 500);
-    return () => window.clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t0, agents.length]);
+  // Subscribes to the campaign's realtime channel. v0 stub returns
+  // `connected: false`; Ticket 7 fills in the handlers.
+  useCampaignChannel(campaign?.id ?? null);
 
   const focusAgent = agents.find((a) => a.id === focusId) || null;
 
