@@ -131,3 +131,34 @@ activity done during provisioning (see invariant #10), not a runtime dependency.
 - Edge webhook handlers return < 5s and are idempotent.
 - No secrets committed; deploys clean to Vercel; `/healthz` green.
 - Extends the relevant adapter rather than special-casing a vertical.
+
+---
+
+## Patch v2.2 — validation lifecycle + schema shape (read this)
+
+**Two-stage validation (resolves the Ticket 1 boot-deadlock).** Blueprint validation
+happens at two distinct lifecycle stages — do not collapse them:
+- **At module load** (`validateBlueprint`): structural checks only — `vertical_id` format,
+  non-empty `persona_set`, every `enum` field has `options`, consumer audience implies
+  `dnc_scrub_required`. These must fail loud at import / build time.
+- **At dispatch** (`assertDispatchReady`): provisioning-readiness checks — `flow_template_id`
+  is non-empty, `RETELL_FROM_NUMBER` is set. The Retell batch layer calls this immediately
+  before placing any call. **`flow_template_id` is NOT validated at load** — it is empty
+  until Ticket 2.5 provisions it, and the app must boot and develop cleanly in between.
+
+**`dynamic_var_schema` shape.** The canonical shape is the rich form Ticket 1 shipped:
+`Record<string, { kind: "string"|"number"|"enum"; required: boolean; label: string;
+prompt: string; options?: string[]; example?: string }>`. The bare
+`Record<string, kind>` in PRD section 2 is a *derived view* exposed via
+`dynamicVarSchemaTypes(blueprint)`. Intake (Ticket 4) reads the rich form directly; the
+blueprint is the single source of truth for which fields to collect and how to ask.
+
+**Adapter contract is locked — fill bodies, never reshape signatures.**
+`sourceLeads(params) -> Promise<Lead[]>`, `buildCallContext(profile, leadId, personaId)
+-> Promise<{ dynamicVars: Record<string,string>; nodeOverrides?: NodeOverride[] }>`,
+`classifyOutcome(toolCallLog) -> Outcome`, and a `scrubLeads(leads) -> Promise<Lead[]>`
+compliance hook (stub ok, but present per invariant #8). Tickets 5/6/8 implement bodies;
+they must not change these signatures.
+
+**`classifyOutcome` is invariant-critical and must have unit tests** (book_meeting -> won;
+objection-only -> not won; empty log -> not won) before it is considered done.
