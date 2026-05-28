@@ -1,0 +1,155 @@
+/* ============================================================================
+   Cell4You — Color & Type Foundations
+   Migrated from frontend_design/colors_and_type.css.
+   Font @import removed — fonts are loaded via next/font in app/layout.tsx
+   and bound to --font-display / --font-sans / --font-mono.
+   ============================================================================ */
+
+:root {
+  /* ---------- Brand primaries -------------------------------------------- */
+  --c4u-cream:        #ECE9E4;
+  --c4u-cream-soft:   #F4F1EC;
+  --c4u-cream-deep:   #DFDBD3;
+
+  --c4u-navy:         #212E41;
+  --c4u-navy-soft:    #2E3D54;
+  --c4u-navy-deep:    #141C28;
+
+  --c4u-coral:        #ED604E;
+  --c4u-coral-soft:   #F58473;
+  --c4u-coral-deep:   #C94634;
+  --c4u-coral-wash:   #FBE3DE;
+
+  --c4u-teal:         #7AB0B0;
+  --c4u-teal-soft:    #9AC6C6;
+  --c4u-teal-deep:    #4E8A8A;
+  --c4u-teal-wash:    #E2EEEE;
+
+  --c4u-ink:          #0B0A08;
+  --c4u-charcoal:     #1F1D1A;
+  --c4u-graphite:     #3A3733;
+  --c4u-stone:        #6B6862;
+  --c4u-mist:         #A8A5A0;
+  --c4u-bone:         #CFCBC4;
+  --c4u-paper:        #ECE9E4;
+  --c4u-snow:         #F8F6F2;
+  --c4u-white:        #FFFFFF;
+
+  --fg-1: var(--c4u-ink);
+  --fg-2: var(--c4u-charcoal);
+  --fg-3: var(--c4u-stone);
+  --fg-4: var(--c4u-mist);
+  --fg-on-dark:       #F4F1EC;
+  --fg-on-coral:      #FFFFFF;
+  --fg-on-navy:       #F4F1EC;
+
+  --bg-1: var(--c4u-cream);
+  --bg-2: var(--c4u-snow);
+  --bg-3: var(--c4u-cream-soft);
+  --bg-inverse: var(--c4u-navy);
+  --bg-cinema: var(--c4u-navy-deep);
+
+  --state-queued:      #6B6862;
+  --state-dialing:     #E0B341;
+  --state-ringing:     #7AB0B0;
+  --state-connected:   #5AB373;
+  --state-pitch:       #ED604E;
+  --state-closed-won:  #2E8F4E;
+  --state-closed-lost: #8E5550;
+  --state-no-answer:   #A8A5A0;
+  --state-voicemail:   #B7A78F;
+
+  --border-1: rgba(11, 10, 8, 0.08);
+  --border-2: rgba(11, 10, 8, 0.16);
+  --border-strong: rgba(11, 10, 8, 0.32);
+  --border-on-dark: rgba(244, 241, 236, 0.12);
+
+  --shadow-xs:   0 1px 2px rgba(33, 28, 20, 0.06);
+  --shadow-sm:   0 1px 2px rgba(33, 28, 20, 0.06), 0 2px 6px rgba(33, 28, 20, 0.05);
+  --shadow-md:   0 2px 4px rgba(33, 28, 20, 0.06), 0 8px 20px rgba(33, 28, 20, 0.08);
+  --shadow-lg:   0 4px 8px rgba(33, 28, 20, 0.06), 0 16px 40px rgba(33, 28, 20, 0.10);
+  --shadow-coral:0 6px 24px rgba(237, 96, 78, 0.32);
+  --shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  --r-xs: 4px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-2xl: 32px;
+  --r-pill: 999px;
+
+  --s-1: 4px;  --s-2: 8px;   --s-3: 12px; --s-4: 16px; --s-5: 20px;
+  --s-6: 24px; --s-8: 32px;  --s-10: 40px; --s-12: 48px; --s-16: 64px; --s-20: 80px;
+
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.32, 0.64, 1);
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+
+  /* Font families default to system stacks; next/font overrides these
+     in app/layout.tsx so we don't need to ship @import url(...) here. */
+  --font-display: var(--font-c4u-display, 'Source Serif 4', Georgia, serif);
+  --font-sans:    var(--font-c4u-sans,    'Public Sans', system-ui, sans-serif);
+  --font-mono:    var(--font-c4u-mono,    'JetBrains Mono', ui-monospace, monospace);
+
+  --t-hero:   clamp(56px, 8vw, 96px);
+  --t-h1:     clamp(40px, 5.5vw, 64px);
+  --t-h2:     clamp(32px, 4vw, 44px);
+  --t-h3:     28px;
+  --t-h4:     22px;
+  --t-h5:     18px;
+  --t-body:   16px;
+  --t-small:  14px;
+  --t-caption:12px;
+  --t-mono:   13px;
+
+  --lh-tight: 1.05;
+  --lh-snug:  1.2;
+  --lh-base:  1.5;
+  --lh-loose: 1.7;
+
+  --tr-tight: -0.02em;
+  --tr-snug:  -0.01em;
+  --tr-base:  0;
+  --tr-wide:  0.04em;
+}
+
+.c4u-hero {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--t-hero);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-tight);
+  color: var(--fg-1);
+  text-wrap: balance;
+}
+
+.c4u-body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--t-body);
+  line-height: var(--lh-base);
+  color: var(--fg-2);
+}
+
+.c4u-caption {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--t-caption);
+  line-height: 1.4;
+  letter-spacing: var(--tr-wide);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.c4u-quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.35;
+  color: var(--fg-1);
+  text-wrap: pretty;
+}

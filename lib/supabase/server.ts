@@ -32,7 +32,13 @@ export function createServiceClient() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !serviceRoleKey) {
-    throw new Error("Supabase service credentials are not configured.");
+    const missing = [
+      !url ? "NEXT_PUBLIC_SUPABASE_URL" : null,
+      !serviceRoleKey ? "SUPABASE_SERVICE_ROLE_KEY" : null,
+    ].filter(Boolean);
+    throw new Error(
+      `Supabase service credentials are not configured. Missing: ${missing.join(", ")}.`,
+    );
   }
 
   return createSupabaseClient(url, serviceRoleKey, {

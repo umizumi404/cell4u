@@ -14,7 +14,11 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { transcribeWithWispr } from "@/lib/voice/wispr-client";
 
-export function VoiceSetup() {
+export function VoiceSetup({
+  onCampaignResponse,
+}: {
+  onCampaignResponse?: (payload: unknown) => void;
+}) {
   const [transcript, setTranscript] = useState("");
   const [state, setState] = useState<
     "idle" | "recording" | "transcribing" | "submitting" | "ready" | "error"
@@ -34,6 +38,9 @@ export function VoiceSetup() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript }),
       });
+      const payload = await response.json();
+
+      onCampaignResponse?.(payload);
 
       if (!response.ok) {
         throw new Error("Campaign request failed.");

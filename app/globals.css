@@ -1,3 +1,5 @@
+@import "./c4u/tokens.css";
+@import "./c4u/kit.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -7,9 +9,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
-  --font-heading: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-c4u-sans), "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-c4u-mono), "JetBrains Mono", ui-monospace, monospace;
+  --font-heading: var(--font-c4u-display), "Source Serif 4", Georgia, serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,88 +50,59 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* shadcn primitives kept in the dark-coloured token palette so any
+   incidental shadcn surface (e.g. tooltip, dialog) still renders. The
+   cell4you product surface is driven entirely by the c4u-* classes
+   defined in ./c4u/tokens.css and ./c4u/kit.css. */
 :root {
-  --background: oklch(0.12 0.01 257);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.17 0.012 257);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.17 0.012 257);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.86 0.015 257);
-  --primary-foreground: oklch(0.15 0.01 257);
-  --secondary: oklch(0.23 0.014 257);
-  --secondary-foreground: oklch(0.94 0.004 257);
-  --muted: oklch(0.23 0.014 257);
-  --muted-foreground: oklch(0.7 0.012 257);
-  --accent: oklch(0.24 0.028 245);
-  --accent-foreground: oklch(0.96 0.006 257);
-  --destructive: oklch(0.64 0.2 25);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.72 0.035 245);
-  --chart-1: oklch(0.72 0.035 245);
-  --chart-2: oklch(0.68 0.12 153);
-  --chart-3: oklch(0.76 0.11 85);
-  --chart-4: oklch(0.66 0.11 300);
-  --chart-5: oklch(0.62 0.16 24);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.14 0.012 257);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.86 0.015 257);
-  --sidebar-primary-foreground: oklch(0.15 0.01 257);
-  --sidebar-accent: oklch(0.22 0.014 257);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.72 0.035 245);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: var(--c4u-cream);
+  --foreground: var(--c4u-ink);
+  --card: var(--c4u-snow);
+  --card-foreground: var(--c4u-ink);
+  --popover: var(--c4u-snow);
+  --popover-foreground: var(--c4u-ink);
+  --primary: var(--c4u-coral);
+  --primary-foreground: #ffffff;
+  --secondary: var(--c4u-cream-soft);
+  --secondary-foreground: var(--c4u-ink);
+  --muted: var(--c4u-cream-soft);
+  --muted-foreground: var(--c4u-stone);
+  --accent: var(--c4u-cream-deep);
+  --accent-foreground: var(--c4u-ink);
+  --destructive: #c94634;
+  --border: var(--border-1);
+  --input: var(--border-2);
+  --ring: var(--c4u-coral);
+  --chart-1: var(--c4u-coral);
+  --chart-2: var(--c4u-teal);
+  --chart-3: var(--c4u-navy);
+  --chart-4: var(--c4u-stone);
+  --chart-5: var(--c4u-graphite);
+  --radius: 0.75rem;
+  --sidebar: var(--c4u-snow);
+  --sidebar-foreground: var(--c4u-ink);
+  --sidebar-primary: var(--c4u-coral);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--c4u-cream-deep);
+  --sidebar-accent-foreground: var(--c4u-ink);
+  --sidebar-border: var(--border-1);
+  --sidebar-ring: var(--c4u-coral);
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-foreground;
-    background-image:
-      radial-gradient(circle at 20% 0%, oklch(0.27 0.035 245 / 35%), transparent 30rem),
-      radial-gradient(circle at 80% 10%, oklch(0.23 0.04 290 / 22%), transparent 28rem),
-      linear-gradient(180deg, oklch(0.145 0.012 257), oklch(0.105 0.01 257));
-    background-attachment: fixed;
-  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
   html {
-    @apply h-full scroll-smooth font-sans;
+    @apply h-full scroll-smooth;
+    font-family: var(--font-sans);
   }
+  body.c4u-body-root {
+    background: var(--c4u-cream);
+    color: var(--fg-2);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+  button { font: inherit; }
 }
