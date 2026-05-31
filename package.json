@@ -7,12 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "provision": "tsx --env-file=.env scripts/provision/index.ts",
+    "provision:dry": "tsx --env-file=.env scripts/provision/index.ts --dry-run"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
     "@upstash/realtime": "^1.0.3",
     "@upstash/redis": "^1.38.0",
+    "@vercel/functions": "^3.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.16.0",
@@ -34,6 +37,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
+    "tsx": "^4.22.3",
     "typescript": "^5",
     "vitest": "^4.1.7"
   }

@@ -124,3 +124,22 @@ export function getBlueprint(verticalId: string): RegisteredBlueprint {
   const declared = DECLARED_VERTICAL_IDS.includes(verticalId);
   throw new UnknownBlueprintError(verticalId, declared);
 }
+
+/**
+ * Resolve a blueprint by id **ignoring its enable flag**.
+ *
+ * The runtime/request path must NEVER use this — it bypasses the safety
+ * gate that keeps flag-locked verticals (e.g. real_estate_acquisition
+ * until scrubLeads is implemented per AGENTS.md invariant #8) dark.
+ *
+ * Provisioning (Ticket 2.5) is the only legitimate caller: it publishes
+ * template flows for every declared vertical so a future flag-flip is
+ * zero-friction.
+ */
+export function getDeclaredBlueprint(verticalId: string): RegisteredBlueprint {
+  const mod = BLUEPRINT_MODULES.find(
+    (m) => m.entry.blueprint.vertical_id === verticalId,
+  );
+  if (!mod) throw new UnknownBlueprintError(verticalId, false);
+  return mod.entry;
+}

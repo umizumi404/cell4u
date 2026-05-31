@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# provisioning ledger (local record; source of truth is the Retell account)
+scripts/provision/.provisioned.json
+
